@@ -1,12 +1,9 @@
 package com.shevy.bitsandpizzas
 
-import android.content.Context
-import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,8 +12,14 @@ import com.shevy.bitsandpizzas.CaptionedImagesAdapter.*
 class CaptionedImagesAdapter(
     private val captions: Array<String?>,
     private val imageIds: IntArray
+
 ) :
-    RecyclerView.Adapter<CaptionedImagesAdapter.ViewHolder>() {
+    RecyclerView.Adapter<ViewHolder>() {
+    private var listener: CaptionedImagesAdapter.Listener? = null
+
+    interface Listener {
+        fun onClick(position: Int)
+    }
 
     class ViewHolder(internal val cardView: CardView) : RecyclerView.ViewHolder(
         cardView
@@ -24,6 +27,10 @@ class CaptionedImagesAdapter(
 
     override fun getItemCount(): Int {
         return captions.size
+    }
+
+    fun setListener(listener: CaptionedImagesAdapter.Listener?) {
+        this.listener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
@@ -41,6 +48,9 @@ class CaptionedImagesAdapter(
         imageView.contentDescription = captions[position]
         val textView: TextView = cardView.findViewById(R.id.info_text)
         textView.text = captions[position]
+        cardView.setOnClickListener {
+            listener?.onClick(position)
+        }
     }
 }
 
